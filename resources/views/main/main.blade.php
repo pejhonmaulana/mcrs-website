@@ -93,14 +93,14 @@
                                                 </h5>
                                                 <p style="font-size: 10px">{{ $item->tempatKuliner->location }}</p>
                                                 <div class="row">
-                                                    <div class="col">
+                                                    {{-- <div class="col">
                                                         @for ($i = 0; $i < $item->overall; $i++)
                                                             <span class="fa fa-star checked text-warning"></span>
                                                         @endfor
                                                         @for ($i = 0; $i < 5 - $item->overall; $i++)
                                                             <span class="fa fa-star checked"></span>
                                                         @endfor
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>
