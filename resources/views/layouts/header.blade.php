@@ -21,9 +21,14 @@
                 </li>
             </ul>
             <div class="user_option">
-                <a href="" class="order_online">
+                <a href="{{ route('logout') }}"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    class="order_online">
                     Logout
                 </a>
+                <form action="{{ route('logout') }}" id="logout-form" method="post" style="display: none;">
+                    @csrf
+                </form>
             </div>
         </div>
     </nav>

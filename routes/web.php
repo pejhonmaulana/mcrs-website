@@ -38,4 +38,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/tentang-kami', function () {
         return view('main.about');
     })->name('about');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
