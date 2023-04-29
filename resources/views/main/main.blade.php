@@ -84,24 +84,27 @@
                                 <div class="col-sm-6 col-lg-4 all burger">
                                     <div class="box">
                                         <div>
+                                            <div class="bg-warning text-center">
+                                                <b class="text-dark">Rekomendasi</b>
+                                            </div>
                                             <div class="img-box">
                                                 <img src="{{ asset($item->tempatKuliner->image) }}" alt="">
                                             </div>
                                             <div class="detail-box">
-                                                <h5>
-                                                    {{ $item->tempatKuliner->nama_tempat }}
-                                                </h5>
-                                                <p style="font-size: 10px">{{ $item->tempatKuliner->location }}</p>
                                                 <div class="row">
-                                                    {{-- <div class="col">
-                                                        @for ($i = 0; $i < $item->overall; $i++)
-                                                            <span class="fa fa-star checked text-warning"></span>
-                                                        @endfor
-                                                        @for ($i = 0; $i < 5 - $item->overall; $i++)
-                                                            <span class="fa fa-star checked"></span>
-                                                        @endfor
-                                                    </div> --}}
+                                                    <div class="col-10">
+                                                        <h5>
+                                                            {{ $item->tempatKuliner->nama_tempat }}
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="rounded-circle bg-warning text-center text-dark">
+                                                            <p>{{ $loop->iteration }}</p>
+                                                        </div>
+                                                    </div>
                                                 </div>
+
+                                                <p style="font-size: 10px">{{ $item->tempatKuliner->location }}</p>
                                             </div>
                                         </div>
                                     </div>

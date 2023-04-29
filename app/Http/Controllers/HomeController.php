@@ -341,17 +341,6 @@ class HomeController extends Controller
                     ]);
                 }
             }
-            // Rating::create([
-            //     'user_id' => Auth::user()->id,
-            //     'tempat_kuliner_id' => $tempat_kuliner_id,
-            //     'tempat_parkir' => $request->tempat_parkir,
-            //     'harga' => $request->harga,
-            //     'pegawai' => $request->pegawai,
-            //     'menu' => $request->menu,
-            //     'akses_jalan' => $request->akses_jalan,
-            //     'mushola' => $request->musholla,
-            //     'overall' => $request->overall,
-            // ]);
         } else {
             Rating::whereUserId(Auth::user()->id)->whereTempatKulinerId($tempat_kuliner_id)->update([
                 'user_id' => Auth::user()->id,
@@ -375,7 +364,7 @@ class HomeController extends Controller
         $jumlahTerRating = count($rating);
         $tempatKuliners = TempatKuliner::with(['ratings' => function ($query) {
             $query->where('user_id', auth()->user()->id);
-        }])->get();
+        }])->inRandomOrder()->limit(3)->get();
         return view('main.rating', compact('tempatKuliners', 'jumlahTerRating', 'rating'));
     }
 
