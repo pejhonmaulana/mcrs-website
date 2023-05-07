@@ -70,61 +70,14 @@
         <div class="container">
             <div class="heading_container heading_center mt-3">
                 <h1>
-                    Daftar Rekomendasi Tempat Makan (Average Similarity)
+                    Daftar Rekomendasi Tempat Makan
                 </h1>
             </div>
-
-
-
-            @if (isset($recommendations))
+            @if (isset($averageAll))
                 @if ($jumlahTerRating >= 3)
-                    <div class="heading_container heading_center mt-3">
-                        <h2>
-                            Average Similarity
-                        </h2>
-                    </div>
                     <div class="filters-content">
                         <div class="row grid">
-                            @foreach ($recommendations as $item)
-                                <div class="col-sm-6 col-lg-4 all burger">
-                                    <div class="box">
-                                        <div>
-                                            <div class="bg-warning text-center">
-                                                <b class="text-dark">Rekomendasi</b>
-                                            </div>
-                                            <div class="img-box">
-                                                <img src="{{ asset($item->tempatKuliner->image) }}" alt="">
-                                            </div>
-                                            <div class="detail-box">
-                                                <div class="row">
-                                                    <div class="col-10">
-                                                        <h5>
-                                                            {{ $item->tempatKuliner->nama_tempat }}
-                                                        </h5>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="rounded-circle bg-warning text-center text-dark">
-                                                            <p>{{ $loop->iteration }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <p style="font-size: 10px">{{ $item->tempatKuliner->location }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="heading_container heading_center mt-3">
-                        <h2>
-                            Aggregate
-                        </h2>
-                    </div>
-                    <div class="filters-content">
-                        <div class="row grid">
-                            @foreach ($agregateRecom as $item)
+                            @foreach ($averageAll as $item)
                                 <div class="col-sm-6 col-lg-4 all burger">
                                     <div class="box">
                                         <div>
