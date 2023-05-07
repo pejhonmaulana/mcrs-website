@@ -303,10 +303,217 @@ class HomeController extends Controller
 
                 $recommendations = $getUnRatings->sortBy([
                     ['overall', 'desc']
-                ])->take(5);
+                ])->take(3);
+
+                // Agregate
+
+                $getUnRatings = Rating::whereUserId($userId)->with('tempatKuliner')->get();
+                $getURatings = Rating::with('user')->where('user_id', '!=', $userId)->get()->groupBy('user_id');
+                // variable tempat_parkir
+                $averageTempatParkirUn = 0;
+                $averageTempatParkirU = 0;
+                $sigmaTempatParkir = 0;
+                $sigmaTempatParkirUn = 0;
+                $sigmaTempatParkirU = 0;
+                $agregateTempatParkir = 0;
+
+                // variable harga
+                $averageHargaUn = 0;
+                $averageHargaU = 0;
+                $sigmaHarga = 0;
+                $sigmaHargaUn = 0;
+                $sigmaHargaU = 0;
+                $agregateHarga = 0;
+
+                // variable pegawai
+                $averagePegawaiUn = 0;
+                $averagePegawaiU = 0;
+                $sigmaPegawai = 0;
+                $sigmaPegawaiUn = 0;
+                $sigmaPegawaiU = 0;
+                $agregatePegawai = 0;
+
+                // variable menu
+                $averageMenuUn = 0;
+                $averageMenuU = 0;
+                $sigmaMenu = 0;
+                $sigmaMenuUn = 0;
+                $sigmaMenuU = 0;
+                $agregateMenu = 0;
+
+                // variable akses_jalan
+                $averageAksesJalanUn = 0;
+                $averageAksesJalanU = 0;
+                $sigmaAksesJalan = 0;
+                $sigmaAksesJalanUn = 0;
+                $sigmaAksesJalanU = 0;
+                $agregateAksesJalan = 0;
+
+                // variable musholla
+                $averageMushollaUn = 0;
+                $averageMushollaU = 0;
+                $sigmaMusholla = 0;
+                $sigmaMushollaUn = 0;
+                $sigmaMushollaU = 0;
+                $agregateMusholla = 0;
+
+                // variable overall
+                $averageOverallUn = 0;
+                $averageOverallU = 0;
+                $sigmaOverall = 0;
+                $sigmaOverallUn = 0;
+                $sigmaOverallU = 0;
+                $agregateOverall = 0;
+
+                $total = 0;
+                $averageagregate = [];
+
+                foreach ($getURatings as $getURating) {
+                    foreach ($getUnRatings as $key => $getUnRating) {
+                        // tempat_parkir
+                        $averageTempatParkirUn += $getUnRating->tempat_parkir;
+                        $averageTempatParkirU += $getURating[$key]['tempat_parkir'];
+
+                        // harga
+                        $averageHargaUn += $getUnRating->harga;
+                        $averageHargaU += $getURating[$key]['harga'];
+
+                        // pegawai
+                        $averagePegawaiUn += $getUnRating->pegawai;
+                        $averagePegawaiU += $getURating[$key]['pegawai'];
+
+                        // menu
+                        $averageMenuUn += $getUnRating->menu;
+                        $averageMenuU += $getURating[$key]['menu'];
+
+                        // akses_jalan
+                        $averageAksesJalanUn += $getUnRating->akses_jalan;
+                        $averageAksesJalanU += $getURating[$key]['akses_jalan'];
+
+                        // musholla
+                        $averageMushollaUn += $getUnRating->musholla;
+                        $averageMushollaU += $getURating[$key]['musholla'];
+
+                        // overall
+                        $averageOverallUn += $getUnRating->overall;
+                        $averageOverallU += $getURating[$key]['overall'];
+                    }
+                    foreach ($getUnRatings as $key => $getUnRating) {
+                        $agregateTempatParkir += (($getUnRating->tempat_parkir / 5));
+                        $agregateHarga += (($getUnRating->harga / 5));
+                        $agregatePegawai += (($getUnRating->pegawai / 5));
+                        $agregateMenu += (($getUnRating->menu / 5));
+                        $agregateAksesJalan += (($getUnRating->akses_jalan / 5));
+                        $agregateOverall += (($getUnRating->overall / 5));
+                    }
+
+                    $total = $agregateTempatParkir +
+                        $agregatePegawai +
+                        $agregateHarga +
+                        $agregateMenu +
+                        $agregateAksesJalan +
+                        $agregateMusholla +
+                        $agregateOverall;
+
+                    $arr = [
+                        'avgSim' => ((1 * $total) / (7 + 1)),
+                        'user_id' => $getURating[0]['user_id']
+                    ];
+                    array_push($averageagregate, $arr);
+
+                    // reset tempat_parkir
+                    $averageTempatParkirUn = 0;
+                    $averageTempatParkirU = 0;
+                    $sigmaTempatParkir = 0;
+                    $sigmaTempatParkirUn = 0;
+                    $sigmaTempatParkirU = 0;
+
+                    // reset harga
+                    $averageHargaUn = 0;
+                    $averageHargaU = 0;
+                    $sigmaHarga = 0;
+                    $sigmaHargaUn = 0;
+                    $sigmaHargaU = 0;
+
+                    // reset pegawai
+                    $averagePegawaiUn = 0;
+                    $averagePegawaiU = 0;
+                    $sigmaPegawai = 0;
+                    $sigmaPegawaiUn = 0;
+                    $sigmaPegawaiU = 0;
+
+                    // reset menu
+                    $averageMenuUn = 0;
+                    $averageMenuU = 0;
+                    $sigmaMenu = 0;
+                    $sigmaMenuUn = 0;
+                    $sigmaMenuU = 0;
+
+                    // reset akses_jalan
+                    $averageAksesJalanUn = 0;
+                    $averageAksesJalanU = 0;
+                    $sigmaAksesJalan = 0;
+                    $sigmaAksesJalanUn = 0;
+                    $sigmaAksesJalanU = 0;
+
+                    // reset musholla
+                    $averageMushollaUn = 0;
+                    $averageMushollaU = 0;
+                    $sigmaMusholla = 0;
+                    $sigmaMushollaUn = 0;
+                    $sigmaMushollaU = 0;
+
+                    // reset overall
+                    $averageOverallUn = 0;
+                    $averageOverallU = 0;
+                    $sigmaOverall = 0;
+                    $sigmaOverallUn = 0;
+                    $sigmaOverallU = 0;
+                }
+
+                // mencari agregate paling besar
+                $biggestEquation = 0;
+                $rankOne = [];
+                foreach ($averageagregate as $avgSim) {
+                    if ($biggestEquation < $avgSim['avgSim']) {
+                        $biggestEquation = $avgSim['avgSim'];
+                        array_push($rankOne, $avgSim['avgSim'], $avgSim['user_id']);
+                    }
+                }
+
+                // mencari user yang sudah ditemukan kesamaannya paling besar dan mengganti rating 0 pada user N dengan user yang sudah terpilih
+                $getUserBiggestagregate = Rating::whereUserId($rankOne[1])->get();
+
+                for ($i = 0; $i < count($getUnRatings); $i++) {
+                    $ua = $getUserBiggestagregate->where('residence_id', $getUnRatings[$i]->residence_id)->first();
+
+                    if ($getUnRatings[$i]->tempat_parkir == 0)
+                        $getUnRatings[$i]->tempat_parkir = $ua->tempat_parkir;
+
+                    if ($getUnRatings[$i]->harga == 0)
+                        $getUnRatings[$i]->harga = $ua->harga;
+
+                    if ($getUnRatings[$i]->pegawai == 0)
+                        $getUnRatings[$i]->pegawai = $ua->pegawai;
+
+                    if ($getUnRatings[$i]->menu == 0)
+                        $getUnRatings[$i]->menu = $ua->menu;
+
+                    if ($getUnRatings[$i]->akses_jalan == 0)
+                        $getUnRatings[$i]->akses_jalan = $ua->akses_jalan;
+
+                    if ($getUnRatings[$i]->musholla == 0)
+                        $getUnRatings[$i]->musholla = $ua->musholla;
+
+                    if ($getUnRatings[$i]->overall == 0)
+                        $getUnRatings[$i]->overall = $ua->overall;
+                }
+                $agregateRecom = $getUnRatings->sortBy([
+                    ['overall', 'desc']
+                ])->take(3);
             }
         }
-        return view('main.main', compact('tempatKuliners', 'recommendations', 'jumlahTerRating'));
+        return view('main.main', compact('tempatKuliners', 'recommendations', 'jumlahTerRating', 'agregateRecom'));
     }
 
     public function store(Request $request, $tempat_kuliner_id)
