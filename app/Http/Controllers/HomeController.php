@@ -514,85 +514,86 @@ class HomeController extends Controller
             }
         }
         // Average 2 algorithm
-        $tempatParkir = 0;
-        $harga = 0;
-        $pegawai = 0;
-        $menu = 0;
-        $aksesJalan = 0;
-        $musholla = 0;
-        $overall = 0;
-        $averageAll = [];
-        $recommendations = $recommendations->toArray();
-        $keysSimilarity = array_keys($recommendations);
-        $keysSimilarity = array_reverse($keysSimilarity);
+        if (isset($agregateRecom) && isset($recommendations)) {
+            $tempatParkir = 0;
+            $harga = 0;
+            $pegawai = 0;
+            $menu = 0;
+            $aksesJalan = 0;
+            $musholla = 0;
+            $overall = 0;
+            $averageAll = [];
+            $recommendations = $recommendations->toArray();
+            $keysSimilarity = array_keys($recommendations);
+            $keysSimilarity = array_reverse($keysSimilarity);
 
-        $agregateRecom = $agregateRecom->toArray();
-        $keysAggregate = array_keys($agregateRecom);
-        $keysAggregate = array_reverse($keysAggregate);
-        for ($i = 0; $i < 3; $i++) {
-            $tempatParkir += ($recommendations[$keysSimilarity[$i]]['tempat_parkir'] + $agregateRecom[$keysAggregate[$i]]['tempat_parkir']) / 2;
-            $harga += ($recommendations[$keysSimilarity[$i]]['harga'] + $agregateRecom[$keysAggregate[$i]]['harga']) / 2;
-            $pegawai += ($recommendations[$keysSimilarity[$i]]['pegawai'] + $agregateRecom[$keysAggregate[$i]]['pegawai']) / 2;
-            $menu += ($recommendations[$keysSimilarity[$i]]['menu'] + $agregateRecom[$keysAggregate[$i]]['menu']) / 2;
-            $aksesJalan += ($recommendations[$keysSimilarity[$i]]['akses_jalan'] + $agregateRecom[$keysAggregate[$i]]['akses_jalan']) / 2;
-            $musholla += ($recommendations[$keysSimilarity[$i]]['musholla'] + $agregateRecom[$keysAggregate[$i]]['musholla']) / 2;
-            $overall += ($recommendations[$keysSimilarity[$i]]['overall'] + $agregateRecom[$keysAggregate[$i]]['overall']) / 2;
-        }
-        $total = $tempatParkir +
-            $harga +
-            $pegawai +
-            $menu +
-            $aksesJalan +
-            $musholla +
-            $overall;
-
-        $arr = [
-            'avgSim' => ((1 * $total) / (7 + 1)),
-            'user_id' => $getURating[0]['user_id']
-        ];
-
-        array_push($averageAll, $arr);
-        // mencari agregate paling besar
-        $biggestEquation = 0;
-        $rankOne = [];
-        foreach ($averageAll as $avgSim) {
-            if ($biggestEquation < $avgSim['avgSim']) {
-                $biggestEquation = $avgSim['avgSim'];
-                array_push($rankOne, $avgSim['avgSim']);
+            $agregateRecom = $agregateRecom->toArray();
+            $keysAggregate = array_keys($agregateRecom);
+            $keysAggregate = array_reverse($keysAggregate);
+            for ($i = 0; $i < 3; $i++) {
+                $tempatParkir += ($recommendations[$keysSimilarity[$i]]['tempat_parkir'] + $agregateRecom[$keysAggregate[$i]]['tempat_parkir']) / 2;
+                $harga += ($recommendations[$keysSimilarity[$i]]['harga'] + $agregateRecom[$keysAggregate[$i]]['harga']) / 2;
+                $pegawai += ($recommendations[$keysSimilarity[$i]]['pegawai'] + $agregateRecom[$keysAggregate[$i]]['pegawai']) / 2;
+                $menu += ($recommendations[$keysSimilarity[$i]]['menu'] + $agregateRecom[$keysAggregate[$i]]['menu']) / 2;
+                $aksesJalan += ($recommendations[$keysSimilarity[$i]]['akses_jalan'] + $agregateRecom[$keysAggregate[$i]]['akses_jalan']) / 2;
+                $musholla += ($recommendations[$keysSimilarity[$i]]['musholla'] + $agregateRecom[$keysAggregate[$i]]['musholla']) / 2;
+                $overall += ($recommendations[$keysSimilarity[$i]]['overall'] + $agregateRecom[$keysAggregate[$i]]['overall']) / 2;
             }
+            $total = $tempatParkir +
+                $harga +
+                $pegawai +
+                $menu +
+                $aksesJalan +
+                $musholla +
+                $overall;
+
+            $arr = [
+                'avgSim' => ((1 * $total) / (7 + 1)),
+                'user_id' => $getURating[0]['user_id']
+            ];
+
+            array_push($averageAll, $arr);
+            // mencari agregate paling besar
+            $biggestEquation = 0;
+            $rankOne = [];
+            foreach ($averageAll as $avgSim) {
+                if ($biggestEquation < $avgSim['avgSim']) {
+                    $biggestEquation = $avgSim['avgSim'];
+                    array_push($rankOne, $avgSim['avgSim']);
+                }
+            }
+            $getUserBiggestAverage = Rating::whereUserId($rankOne[0])->get();
+
+            for ($i = 0; $i < 3; $i++) {
+                $ua = $getUserBiggestagregate->where('residence_id', $getUnRatings[$i]->residence_id)->first();
+
+                if ($getUnRatings[$i]->tempat_parkir == 0)
+                    $getUnRatings[$i]->tempat_parkir = $ua->tempat_parkir;
+
+                if ($getUnRatings[$i]->harga == 0)
+                    $getUnRatings[$i]->harga = $ua->harga;
+
+                if ($getUnRatings[$i]->pegawai == 0)
+                    $getUnRatings[$i]->pegawai = $ua->pegawai;
+
+                if ($getUnRatings[$i]->menu == 0)
+                    $getUnRatings[$i]->menu = $ua->menu;
+
+                if ($getUnRatings[$i]->akses_jalan == 0)
+                    $getUnRatings[$i]->akses_jalan = $ua->akses_jalan;
+
+                if ($getUnRatings[$i]->musholla == 0)
+                    $getUnRatings[$i]->musholla = $ua->musholla;
+
+                if ($getUnRatings[$i]->overall == 0)
+                    $getUnRatings[$i]->overall = $ua->overall;
+            }
+            $averageAll = $getUnRatings->sortBy([
+                ['overall', 'desc']
+            ])->take(3);
+            return view('main.main', compact('tempatKuliners', 'averageAll', 'jumlahTerRating'));
         }
-        $getUserBiggestAverage = Rating::whereUserId($rankOne[0])->get();
-
-        for ($i = 0; $i < 3; $i++) {
-            $ua = $getUserBiggestagregate->where('residence_id', $getUnRatings[$i]->residence_id)->first();
-
-            if ($getUnRatings[$i]->tempat_parkir == 0)
-                $getUnRatings[$i]->tempat_parkir = $ua->tempat_parkir;
-
-            if ($getUnRatings[$i]->harga == 0)
-                $getUnRatings[$i]->harga = $ua->harga;
-
-            if ($getUnRatings[$i]->pegawai == 0)
-                $getUnRatings[$i]->pegawai = $ua->pegawai;
-
-            if ($getUnRatings[$i]->menu == 0)
-                $getUnRatings[$i]->menu = $ua->menu;
-
-            if ($getUnRatings[$i]->akses_jalan == 0)
-                $getUnRatings[$i]->akses_jalan = $ua->akses_jalan;
-
-            if ($getUnRatings[$i]->musholla == 0)
-                $getUnRatings[$i]->musholla = $ua->musholla;
-
-            if ($getUnRatings[$i]->overall == 0)
-                $getUnRatings[$i]->overall = $ua->overall;
-        }
-        $averageAll = $getUnRatings->sortBy([
-            ['overall', 'desc']
-        ])->take(3);
-
-        // return view('main.main', compact('tempatKuliners', 'recommendations', 'jumlahTerRating', 'agregateRecom'));
-        return view('main.main', compact('tempatKuliners', 'averageAll', 'jumlahTerRating'));
+        return view('main.main', compact('tempatKuliners', 'jumlahTerRating'));
     }
 
     public function store(Request $request, $tempat_kuliner_id)
